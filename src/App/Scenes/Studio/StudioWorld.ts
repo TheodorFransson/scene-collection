@@ -23,12 +23,12 @@ export default class StudioWorld extends World {
     }
 
     update(): void {
-        this.environment.update()
+        if (this.environment) this.environment.update()
         this.renderer.update()
     }
 
     resize(): void {
-        this.environment.resize()
+        if (this.environment) this.environment.resize()
         this.renderer.resize()
     }
 }

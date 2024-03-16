@@ -25,23 +25,33 @@ export default class App {
         if (_canvas) {
             this.canvas = _canvas
         }
+    }
 
+    public static initializeInstance(_canvas: HTMLCanvasElement): void {
+        if (!App.instance) {
+            App.instance = new App(_canvas);
+            (window as any).experience = App.instance
+       
+            App.instance.completeInitialization()
+        }
+    }
+
+    private completeInitialization(): void {
         this.debug = new Debug()
         this.sizes = new Sizes()
         this.time = new Time()
-        this.resources = new Resources(sources)
+
+        
         this.stateMachine = new StateMachine()
         this.stateMachine.initialize(['load', 'ready', 'city', 'studio', 'weights'])
+
+        this.resources = new Resources(sources)
+
         this.worlds = [new StudioWorld()]
         this.activeWorld = this.worlds[0]
 
-        this.sizes.on('resize', () => {
-            this.resize()
-        })
-
-        this.time.on('tick', () => {
-            this.update()
-        })
+        this.sizes.on('resize', () => this.resize())
+        this.time.on('tick', () => this.update())
     }
 
     resize(): void {
@@ -79,14 +89,7 @@ export default class App {
         }
     }
 
-    static getInstance(_canvas?: HTMLCanvasElement): App {
-        if (!App.instance) {
-            App.instance = new App(_canvas);
-            (window as any).experience = App.instance
-        } else if (_canvas && !App.instance.canvas) {
-            App.instance.canvas = _canvas
-        }
-
+    public static getInstance(): App {
         return App.instance
     }
 }

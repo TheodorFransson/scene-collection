@@ -1,5 +1,5 @@
 import * as dat from 'dat.gui'
-import Stats from 'stats.js'
+import Stats from 'three/examples/jsm/libs/stats.module.js';
 
 export default class Debug {
     active: boolean
@@ -12,7 +12,7 @@ export default class Debug {
         this.active = window.location.hash.includes('debug')
         this.showStats = window.location.hash.includes('stats')
 
-        this.ui = new dat.GUI();
+        this.ui = new dat.GUI()
 
         if (this.showStats) {
             this.stats = new Stats()

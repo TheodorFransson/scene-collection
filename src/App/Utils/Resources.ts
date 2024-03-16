@@ -51,7 +51,7 @@ export default class Resources {
                     this.sourceLoaded(source, file)
                 })
             } else if (source.type === 'cubeTexture') {
-                this.loaders.cubeTextureLoader.load([source.path[0]], (file) => {
+                this.loaders.cubeTextureLoader.load(source.path, (file) => {
                     this.sourceLoaded(source, file)
                 })
             }

@@ -28,6 +28,8 @@ export default class StudioEnvironment extends Environment {
         this.createScene()
         this.setupDebug()
         this.setEnvironmentMap()
+
+        this.stateMachine.switchState('studio')
     }
 
     createScene() {

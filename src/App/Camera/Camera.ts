@@ -25,21 +25,19 @@ export default class Camera
         this.stateMachine = app.stateMachine
     }
 
-    init() {
+    initDefault(): void {
         this.setInstance()
         this.setControls()
         this.handleStates()
     }
 
-    setInstance()
-    {
+    setInstance(): void {
         this.instance = new THREE.PerspectiveCamera(35, this.sizes.width / this.sizes.height, 10, 6000)
         this.instance.position.set(0, 100, 0)
         this.scene.add(this.instance)
     }
 
-    setControls()
-    {
+    setControls(): void {
         this.orbitControls = new OrbitControls(this.instance, this.canvas)
         this.orbitControls.enableDamping = true
         this.orbitControls.enablePan = false
@@ -47,13 +45,12 @@ export default class Camera
         this.orbitControls.enableZoom = false
     }
 
-    resize()
-    {
+    resize(): void {
         this.instance.aspect = this.sizes.width / this.sizes.height
         this.instance.updateProjectionMatrix()
     }
 
-    handleStates() {
+    handleStates(): void {
         this.stateMachine.on('transition', (_previousState: string, currentState: string) => {
             const isInteractiveState = ['city', 'studio', 'weights'].includes(currentState)
             this.orbitControls.enablePan = isInteractiveState
@@ -62,8 +59,7 @@ export default class Camera
         })
     }
 
-    update()
-    {
+    update(): void {
         this.orbitControls.update()
     }
 }

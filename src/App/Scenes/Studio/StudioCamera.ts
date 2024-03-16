@@ -1,16 +1,18 @@
 import * as THREE from 'three'
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import States from '../../StateMachine/States'
-import Camera from '../../Camera/Camera.js'
+import Camera from '../../Camera/Camera'
 
 export default class StudioCamera extends Camera {
+    debugFolder: any
+
     constructor(scene) {
         super(scene)
 
         this.debugFolder = this.debug.ui.addFolder('camera')
 
         super.init()
-        super.handleState(States.studio)
     }
 
     setInstance()

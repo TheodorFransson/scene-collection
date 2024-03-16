@@ -4,19 +4,40 @@ import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js'
 import { UnrealBloomPass }  from 'three/examples/jsm/postprocessing/UnrealBloomPass.js' 
 import { BokehPass } from 'three/examples/jsm/postprocessing/BokehPass.js'
 import { SMAAPass } from 'three/examples/jsm/postprocessing/SMAAPass.js'
-import App from './App.js'
+import { GUI } from 'dat.gui'
 
-export default class Renderer
-{
+import App from './App.js'
+import Sizes from './Utils/Sizes.js'
+import Camera from './Camera/Camera.js'
+import Time from './Utils/Time.js'
+import Debug from './Utils/Debug.js'
+import { Vector2 } from 'three'
+
+export default class Renderer {
+    canvas: HTMLCanvasElement
+    sizes: Sizes
+    scene: THREE.Scene
+    camera: Camera
+    time: Time
+    rendererInstance: THREE.WebGLRenderer
+    composer: EffectComposer
+
+    debug: Debug
+    debugFolder: GUI
+    toneMappingFolder: GUI
+    DOFFolder: GUI
+    bloomFolder: GUI
+
     constructor(scene, camera)
     {
-        this.app = new App()
-        this.canvas = this.app.canvas
-        this.sizes = this.app.sizes
         this.scene = scene
         this.camera = camera
-        this.time = this.app.time
-        this.debug = this.app.debug
+
+        const app = App.getInstance()
+        this.canvas = app.canvas
+        this.sizes = app.sizes
+        this.time = app.time
+        this.debug = app.debug
 
         this.debugFolder = this.debug.ui.addFolder('postprocessing')
         this.toneMappingFolder = this.debug.ui.addFolder('toneMapping')
@@ -40,8 +61,7 @@ export default class Renderer
             depth: true
         })
 
-        this.rendererInstance.physicallyCorrectLights = true
-        this.rendererInstance.outputEncoding = THREE.sRGBEncoding
+        this.rendererInstance.outputColorSpace = THREE.SRGBColorSpace
         this.rendererInstance.toneMapping = THREE.LinearToneMapping
         this.rendererInstance.toneMappingExposure = 1
         this.rendererInstance.shadowMap.enabled = true
@@ -66,7 +86,7 @@ export default class Renderer
             minFilter: THREE.LinearFilter,
             magFilter: THREE.LinearFilter,
             format: THREE.RGBAFormat,
-            encoding: THREE.sRGBEncoding,
+            colorSpace: THREE.SRGBColorSpace,
             samples: samples
         })
 
@@ -75,11 +95,8 @@ export default class Renderer
     }
 
     initPostprocessing() {
-        const unrealBloomPass = new UnrealBloomPass()
+        const unrealBloomPass = new UnrealBloomPass(new Vector2(this.sizes.width, this.sizes.height), 0.025, 0.3, 0.3)
         unrealBloomPass.enabled = false
-        unrealBloomPass.strength = 0.025
-        unrealBloomPass.radius = 0.3
-        unrealBloomPass.threshold = 0.3
         this.composer.addPass(unrealBloomPass)
 
         const bloomController = {
@@ -97,7 +114,7 @@ export default class Renderer
         }
 
         if(this.rendererInstance.getPixelRatio() === 1 && !this.rendererInstance.capabilities.isWebGL2) {
-            const smaaPass = new SMAAPass()
+            const smaaPass = new SMAAPass(this.sizes.width, this.sizes.height)
             this.composer.addPass(smaaPass)
         
             console.log('Using SMAA')
@@ -106,9 +123,7 @@ export default class Renderer
         const bokehPass = new BokehPass(this.scene, this.camera.instance, {
             focus: 1, 
             aperture: 0.025, 
-            maxblur: 0.01,
-            width: this.sizes.width,
-            height: this.sizes.height
+            maxblur: 0.01
         })
         this.composer.addPass(bokehPass)
 

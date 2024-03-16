@@ -2,4 +2,4 @@ import './style.css'
 
 import App from './App/App.js'
 
-const app = new App(document.querySelector('canvas.webgl'))
+const app = App.getInstance(document.querySelector('canvas'))

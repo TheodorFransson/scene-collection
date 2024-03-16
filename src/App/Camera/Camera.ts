@@ -1,24 +1,34 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+
 import App from '../App.js'
+import Sizes from '../Utils/Sizes'
+import Debug from '../Utils/Debug'
+import StateMachine from '../StateMachine/StateMachine'
 
 export default class Camera
 {
-    constructor(scene)
-    {
-        this.app = new App()
-        this.sizes = this.app.sizes
-        this.time = this.app.time
-        this.scene = scene
-        this.canvas = this.app.canvas
-        this.debug = this.app.debug
+    scene: THREE.Scene
+    instance: THREE.PerspectiveCamera
+    sizes: Sizes
+    canvas: HTMLElement
+    debug: Debug
+    stateMachine: StateMachine
+    orbitControls: OrbitControls
 
-        this.stateMachine = this.app.stateMachine
+    constructor(scene: THREE.Scene) {
+        const app = App.getInstance()
+        this.sizes = app.sizes
+        this.scene = scene
+        this.canvas = app.canvas
+        this.debug = app.debug
+        this.stateMachine = app.stateMachine
     }
 
     init() {
         this.setInstance()
         this.setControls()
+        this.handleStates()
     }
 
     setInstance()
@@ -43,11 +53,12 @@ export default class Camera
         this.instance.updateProjectionMatrix()
     }
 
-    handleState(state) {
-        this.stateMachine.states[state].on('on', () => {
-            this.orbitControls.enablePan = true
-            this.orbitControls.enableRotate = true
-            this.orbitControls.enableZoom = true
+    handleStates() {
+        this.stateMachine.on('transition', (_previousState: string, currentState: string) => {
+            const isInteractiveState = ['city', 'studio', 'weights'].includes(currentState)
+            this.orbitControls.enablePan = isInteractiveState
+            this.orbitControls.enableRotate = isInteractiveState
+            this.orbitControls.enableZoom = isInteractiveState
         })
     }
 

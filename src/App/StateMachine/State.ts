@@ -1,17 +1,18 @@
 import EventEmitter from "../Utils/EventEmitter"
 
 export default class State extends EventEmitter {
-    constructor(_name) {
-        super()
+    name: string
 
-        this.name = _name
+    constructor(name: string) {
+        super()
+        this.name = name
     }
 
-    triggerOff() {
+    triggerOff(): void {
         this.trigger('off')
     }
 
-    triggerOn() {
+    triggerOn(): void {
         this.trigger('on')
     }
 }

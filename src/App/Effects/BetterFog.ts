@@ -1,19 +1,33 @@
 import * as THREE from 'three'
 import App from '../App'
+import Debug from '../Utils/Debug'
+
+interface Params {
+    density: number
+    color: string
+    enabled: boolean
+}
 
 export default class BetterFog {
-    constructor() {
-        this.app = new App()
-        this.scene = this.app.scene
-        this.debug = this.app.debug
+    scene: THREE.Scene
+    debug: Debug
+    night: boolean
+    params: Params
+    fog: THREE.FogExp2
+    debugFolder: any
 
-        this.night  = this.debug.night
+    constructor(scene: THREE.Scene) {
+        const app = App.getInstance()
+        this.scene = scene
+        this.debug = app.debug
+
+        this.night = this.debug.night
 
         this.params = {
             density: 0.01,
             color: '#dedede',
             enabled: true
-        }
+        };
 
         if (this.night) this.params.color = '#1d2366'
 
@@ -26,7 +40,7 @@ export default class BetterFog {
         }
     }
 
-    inject() {
+    inject(): void {
         THREE.ShaderChunk.fog_fragment = `
         #ifdef USE_FOG
             vec3 fogOrigin = cameraPosition;
@@ -64,25 +78,20 @@ export default class BetterFog {
         #endif`
     }
 
-    assign() {
+    assign(): void {
         this.fog = new THREE.FogExp2(this.params.color, this.params.density)
         if (this.params.enabled) {
             this.scene.fog = this.fog
         } 
     }
 
-    initDebug() {
+    initDebug(): void {
         const update = () => {
             this.fog.density = this.params.density
-            this.fog.color.set(this.params.color) 
+            this.fog.color.set(this.params.color);
         }
 
         this.debugFolder.add(this.params, 'density', 0.0001, 0.05, 0.0001).onChange(update)
         this.debugFolder.addColor(this.params, 'color').onChange(update)
     }
 }
-
-
-
-
-	

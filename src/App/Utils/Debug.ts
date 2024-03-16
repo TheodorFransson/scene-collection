@@ -1,12 +1,18 @@
 import * as dat from 'dat.gui'
-import * as Stats from 'stats-js'
+import Stats from 'stats.js'
 
 export default class Debug {
+    active: boolean
+    showStats: boolean
+    night: boolean
+    ui: dat.GUI
+    stats?: Stats
+
     constructor() {
         this.active = window.location.hash.includes('debug')
         this.showStats = window.location.hash.includes('stats')
 
-        this.ui = new dat.GUI()
+        this.ui = new dat.GUI();
 
         if (this.showStats) {
             this.stats = new Stats()
@@ -15,11 +21,11 @@ export default class Debug {
         }
     }
 
-    preUpdate() {
-        if (this.showStats) this.stats.begin()
+    preUpdate(): void {
+        if (this.showStats && this.stats) this.stats.begin()
     }
 
-    update() {
-        if (this.showStats) this.stats.end()
+    update(): void {
+        if (this.showStats && this.stats) this.stats.end()
     }
 }

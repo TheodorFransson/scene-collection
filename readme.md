@@ -1,6 +1,6 @@
-# Vite template
+# ThreeJS scene collection
 
-Template for ThreeJS projects based on the template provided in (ThreeJS Journey)[https://threejs-journey.com/].
+A collection of scenes created for various projects and experiments.
 
 ## Setup
 Download [Node.js](https://nodejs.org/en/download/).

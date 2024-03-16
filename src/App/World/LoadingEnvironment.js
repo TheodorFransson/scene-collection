@@ -9,15 +9,13 @@ export default class LoadingEnvironment {
         this.scene = this.app.scene
         this.debug = this.app.debug
         this.stateMachine = this.app.stateMachine
+        this.debugFolder = this.debug.ui.addFolder('loading environment')
 
-        if(this.debug.active)
-        {
-            this.debugFolder = this.debug.ui.addFolder('loading environment')
-        }
-
-        this.setSunLight()
         this.createEnvironment()
         this.resources.startLoading()
+    }
+
+    createEnvironment() {
     }
 
     setSunLight()
@@ -80,8 +78,5 @@ export default class LoadingEnvironment {
                 .max(5)
                 .step(0.001)
         }
-    }
-
-    createEnvironment() {
     }
 }

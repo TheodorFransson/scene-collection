@@ -6,9 +6,7 @@ export default class Debug {
         this.active = window.location.hash.includes('debug')
         this.showStats = window.location.hash.includes('stats')
 
-        if(this.active) {
-            this.ui = new dat.GUI()
-        } 
+        this.ui = new dat.GUI()
 
         if (this.showStats) {
             this.stats = new Stats()

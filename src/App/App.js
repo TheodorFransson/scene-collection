@@ -3,13 +3,12 @@ import * as THREE from 'three'
 import Debug from './Utils/Debug.js'
 import Sizes from './Utils/Sizes.js'
 import Time from './Utils/Time.js'
-import Camera from './Camera/Camera.js'
 import Renderer from './Renderer.js'
-import World from './World/World.js'
 import Resources from './Utils/Resources.js'
 import sources from './World/Data/sources.js'
 import StateMachine from './StateMachine/StateMachine.js'
 import Interact from './Interact.js'
+import StudioWorld from './Scenes/Studio/StudioWorld.js'
 
 let instance = null
 
@@ -37,12 +36,10 @@ export default class App
         this.debug = new Debug()
         this.sizes = new Sizes()
         this.time = new Time()
-        this.scene = new THREE.Scene()
         this.resources = new Resources(sources)
-        this.camera = new Camera()
-        this.renderer = new Renderer()
-        this.world = new World()
-        this.interacter = new Interact()
+        //this.interacter = new Interact()
+        this.worlds = [new StudioWorld()]
+        this.activeWorld = this.worlds[0]
 
         // Resize event
         this.sizes.on('resize', () =>
@@ -59,16 +56,13 @@ export default class App
 
     resize()
     {
-        this.camera.resize()
-        this.renderer.resize()
+        this.activeWorld.resize()
     }
 
     update()
     {
         this.debug.preUpdate()
-        this.camera.update()
-        this.world.update()
-        this.renderer.update()
+        this.activeWorld.update()
         this.debug.update()
     }
 
@@ -78,7 +72,7 @@ export default class App
         this.time.off('tick')
 
         // Traverse the whole scene
-        this.scene.traverse((child) =>
+        this.activeWorld.scene.traverse((child) =>
         {
             // Test if it's a mesh
             if(child instanceof THREE.Mesh)
@@ -99,8 +93,8 @@ export default class App
             }
         })
 
-        this.camera.controls.dispose()
-        this.renderer.instance.dispose()
+        this.activeWorld.camera.controls.dispose()
+        this.activeWorld.renderer.instance.dispose()
 
         if(this.debug.active)
             this.debug.ui.destroy()

@@ -3,23 +3,24 @@ import App from '../App.js'
 
 export default class Environment
 {
-    constructor()
+    constructor(scene, camera)
     {
         this.app = new App()
-        this.scene = this.app.scene
-        this.camera = this.app.camera.instance
+        this.scene = scene
+        this.camera = camera
         this.resources = this.app.resources
         this.stateMachine = this.app.stateMachine
         this.debug = this.app.debug
-       
-        if(this.debug.active)
-        {
-            this.debugFolder = this.debug.ui.addFolder('environment')
-        }
+        this.debugFolder = this.debug.ui.addFolder('environment')
 
-        this.createSimpleScene()
+        this.createScene()
+        this.setupDebug()
         this.setEnvironmentMap()
     }
+
+    createScene() {}
+
+    setupDebug() {}
 
     setEnvironmentMap()
     {
@@ -57,19 +58,24 @@ export default class Environment
         }
     }
 
-    createSimpleScene() {
-    }
-
     setState() {
         this.stateMachine.switchState(States.view)
     }
 
-    setupChildren(scene, material) {
+    updateMaterial(scene, material) {
         scene.traverse((child) => {
             if (child instanceof THREE.Mesh) {
                 child.material = material
                 child.castShadow = false
                 child.receiveShadow = false
+            }
+        })
+    }
+
+    updateTexture(scene, texture) {
+        scene.traverse((child) => {
+            if (child instanceof THREE.Mesh) {
+                child.material.map = texture
             }
         })
     }

@@ -1,24 +1,24 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import App from '../App.js'
-import States from '../StateMachine/States.js'
 
 export default class Camera
 {
-    constructor()
+    constructor(scene)
     {
         this.app = new App()
         this.sizes = this.app.sizes
         this.time = this.app.time
-        this.scene = this.app.scene
+        this.scene = scene
         this.canvas = this.app.canvas
         this.debug = this.app.debug
 
         this.stateMachine = this.app.stateMachine
+    }
 
+    init() {
         this.setInstance()
         this.setControls()
-        this.handeEvents()
     }
 
     setInstance()
@@ -43,8 +43,8 @@ export default class Camera
         this.instance.updateProjectionMatrix()
     }
 
-    handeEvents() {
-        this.stateMachine.states.view.on('on', () => {
+    handleState(state) {
+        this.stateMachine.states[state].on('on', () => {
             this.orbitControls.enablePan = true
             this.orbitControls.enableRotate = true
             this.orbitControls.enableZoom = true

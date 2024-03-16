@@ -9,7 +9,9 @@ export default class StateMachine extends EventEmitter {
         this.states = {
             load: new State(States.load),
             ready: new State(States.ready),
-            view: new State(States.view)
+            city: new State(States.city),
+            studio: new State(States.studio),
+            weights: new State(States.weights)
         }
 
         this.initialState = this.states.load

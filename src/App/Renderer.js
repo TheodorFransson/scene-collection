@@ -8,24 +8,23 @@ import App from './App.js'
 
 export default class Renderer
 {
-    constructor()
+    constructor(scene, camera)
     {
         this.app = new App()
         this.canvas = this.app.canvas
         this.sizes = this.app.sizes
-        this.scene = this.app.scene
-        this.camera = this.app.camera
+        this.scene = scene
+        this.camera = camera
         this.time = this.app.time
         this.debug = this.app.debug
 
-        if(this.debug.active) {
-            this.debugFolder = this.debug.ui.addFolder('postprocessing')
-            this.toneMappingFolder = this.debug.ui.addFolder('toneMapping')
-            this.DOFFolder = this.debugFolder.addFolder('DOF')
-            this.bloomFolder = this.debugFolder.addFolder('unreal bloom')
+        this.debugFolder = this.debug.ui.addFolder('postprocessing')
+        this.toneMappingFolder = this.debug.ui.addFolder('toneMapping')
+        this.DOFFolder = this.debugFolder.addFolder('DOF')
+        this.bloomFolder = this.debugFolder.addFolder('unreal bloom')
 
-            this.toneMappingDebug()
-        }
+        this.toneMappingDebug()
+        
 
         this.setInstance()
         this.initPostprocessing()

@@ -8,6 +8,7 @@ import sources from './World/Data/sources'
 import StateMachine from './StateMachine/StateMachine'
 import StudioWorld from './Scenes/Studio/StudioWorld'
 import World from './World/World'
+import WeightsWorld from './Scenes/Weights/WeightsWorld';
 
 export default class App {
     private static instance: App | null = null
@@ -47,7 +48,7 @@ export default class App {
 
         this.resources = new Resources(sources)
 
-        this.worlds = [new StudioWorld()]
+        this.worlds = [new WeightsWorld()]
         this.activeWorld = this.worlds[0]
 
         this.sizes.on('resize', () => this.resize())

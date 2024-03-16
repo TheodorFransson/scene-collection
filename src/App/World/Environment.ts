@@ -21,6 +21,7 @@ export default class Environment {
     debug: Debug
     debugFolder: GUI | undefined
     environmentMap: EnvironmentMap
+    backgroundColor: THREE.ColorRepresentation
 
     constructor(scene: THREE.Scene, camera: Camera) {
         this.scene = scene

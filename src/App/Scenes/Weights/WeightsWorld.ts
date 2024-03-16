@@ -1,23 +1,23 @@
 import * as THREE from 'three'
 
 import World from '../../World/World'
-import StudioEnvironment from './StudioEnvironment'
+import WeightsEnvironment from './WeightsEnvironment'
 import Renderer from '../../Renderer'
-import StudioCamera from './StudioCamera'
+import WeightsCamera from './WeightsCamera'
 
-export default class StudioWorld extends World {
+export default class WeightsWorld extends World {
     constructor() {
         super()
 
         this.scene = new THREE.Scene()
-        const camera = new StudioCamera(this.scene)
+        const camera = new WeightsCamera(this.scene)
         this.renderer = new Renderer(this.scene, camera)
 
         this.resources.startLoading()
 
         this.stateMachine.on('transition', (previousState: string, currentState: string) => {
             if (currentState === 'ready') {
-                this.environment = new StudioEnvironment(this.scene, camera)
+                this.environment = new WeightsEnvironment(this.scene, camera)
                 this.renderer.setClearColor(this.environment.backgroundColor)
             }
         })

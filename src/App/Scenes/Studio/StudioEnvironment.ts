@@ -24,10 +24,10 @@ export default class StudioEnvironment extends Environment {
         super(scene, camera)
 
         this.debugFolder = this.debug.ui.addFolder('environment')
+        this.backgroundColor =  '#0a0a0a'
 
         this.createScene()
         this.setupDebug()
-        this.setEnvironmentMap()
 
         this.stateMachine.switchState('studio')
     }

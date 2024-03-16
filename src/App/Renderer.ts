@@ -28,7 +28,7 @@ export default class Renderer {
     DOFFolder: GUI
     bloomFolder: GUI
 
-    constructor(scene, camera)
+    constructor(scene: THREE.Scene, camera: Camera)
     {
         this.scene = scene
         this.camera = camera
@@ -45,14 +45,12 @@ export default class Renderer {
         this.bloomFolder = this.debugFolder.addFolder('unreal bloom')
 
         this.toneMappingDebug()
-        
 
         this.setInstance()
         this.initPostprocessing()
     }
 
-    setInstance()
-    {
+    private setInstance(): void {
         this.rendererInstance = new THREE.WebGLRenderer({
             canvas: this.canvas,
             antialias: true,
@@ -68,19 +66,16 @@ export default class Renderer {
         this.rendererInstance.shadowMap.autoUpdate = false
         this.rendererInstance.shadowMap.needsUpdate = true
         this.rendererInstance.shadowMap.type = THREE.PCFSoftShadowMap
-        this.rendererInstance.setClearColor('#2a5bb0')
         this.rendererInstance.autoClear = false
         this.rendererInstance.info.autoReset = false
         this.rendererInstance.setSize(this.sizes.width, this.sizes.height)
         this.rendererInstance.setPixelRatio(Math.min(this.sizes.pixelRatio, 2))
 
-        let samples = null
+        let samples = 0
 
-        if(this.rendererInstance.getPixelRatio() === 1) {
+        if (this.rendererInstance.getPixelRatio() === 1) {
             samples = 4
-        } else {
-            samples = 0
-        }    
+        } 
         
         const renderTarget = new THREE.WebGLRenderTarget(this.sizes.width, this.sizes.height, {
             minFilter: THREE.LinearFilter,
@@ -94,7 +89,7 @@ export default class Renderer {
         this.composer.addPass(new RenderPass(this.scene, this.camera.instance))
     }
 
-    initPostprocessing() {
+    private initPostprocessing(): void {
         const unrealBloomPass = new UnrealBloomPass(new Vector2(this.sizes.width, this.sizes.height), 0.025, 0.3, 0.3)
         unrealBloomPass.enabled = false
         this.composer.addPass(unrealBloomPass)
@@ -141,23 +136,23 @@ export default class Renderer {
             bokehPass.enabled = DOFController.enabled
         }
 
-        if(this.debug.active) {
-            this.DOFFolder.add(DOFController, 'focus', 10, 3000, 10).onChange(DOFUpdate)
-            this.DOFFolder.add(DOFController, 'aperture', 0, 10, 0.1).onChange(DOFUpdate)
-            this.DOFFolder.add(DOFController, 'maxblur', 0, 0.01, 0.001).onChange(DOFUpdate)
-            this.DOFFolder.add(DOFController, 'enabled').onChange(DOFUpdate)
+        
+        this.DOFFolder.add(DOFController, 'focus', 10, 3000, 10).onChange(DOFUpdate)
+        this.DOFFolder.add(DOFController, 'aperture', 0, 10, 0.1).onChange(DOFUpdate)
+        this.DOFFolder.add(DOFController, 'maxblur', 0, 0.01, 0.001).onChange(DOFUpdate)
+        this.DOFFolder.add(DOFController, 'enabled').onChange(DOFUpdate)
 
-            this.bloomFolder.add(bloomController, 'strength', 0.01, 1, 0.001).onChange(bloomUpdate)
-            this.bloomFolder.add(bloomController, 'radius', 0.001, 1, 0.001).onChange(bloomUpdate)
-            this.bloomFolder.add(bloomController, 'threshold', 0.01, 1, 0.01).onChange(bloomUpdate)
-            this.bloomFolder.add(bloomController, 'enabled').onChange(bloomUpdate)
-        }
+        this.bloomFolder.add(bloomController, 'strength', 0.01, 1, 0.001).onChange(bloomUpdate)
+        this.bloomFolder.add(bloomController, 'radius', 0.001, 1, 0.001).onChange(bloomUpdate)
+        this.bloomFolder.add(bloomController, 'threshold', 0.01, 1, 0.01).onChange(bloomUpdate)
+        this.bloomFolder.add(bloomController, 'enabled').onChange(bloomUpdate)
+    
 
         DOFUpdate()
         bloomUpdate()
     }
 
-    toneMappingDebug() {
+    private toneMappingDebug(): void {
         let guiExposure = null
 
         const params = {
@@ -203,8 +198,11 @@ export default class Renderer {
         })
     }
 
-    resize()
-    {
+    setClearColor(color: THREE.ColorRepresentation): void {
+        this.rendererInstance.setClearColor(color)
+    }
+
+    resize(): void {
         this.rendererInstance.setSize(this.sizes.width, this.sizes.height)
         this.rendererInstance.setPixelRatio(Math.min(this.sizes.pixelRatio, 2))
 
@@ -212,8 +210,7 @@ export default class Renderer {
         this.composer.setPixelRatio(Math.min(this.sizes.pixelRatio, 2))
     }
 
-    update()
-    {
+    update(): void {
         this.rendererInstance.info.reset()
         this.composer.render(this.time.delta)
     }

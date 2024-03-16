@@ -63,6 +63,26 @@ const resources: Resource[] = [
         type: 'texture',
         path: ['textures/baked/backdropThree.jpg'],
     },
+    {
+        name: 'equipment',
+        type: 'gltfModel',
+        path: ['models/equipment.glb']
+    }, 
+    {
+        name: 'ground',
+        type: 'gltfModel',
+        path: ['models/ground.glb']
+    }, 
+    {
+        name: 'bakedEquipment',
+        type: 'texture',
+        path: ['textures/baked/Equipment.jpg']
+    },
+    {
+        name: 'bakedGround',
+        type: 'texture',
+        path: ['textures/baked/Ground.jpg']
+    }
 ]
 
 export default resources

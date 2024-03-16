@@ -17,6 +17,7 @@ export default class World {
         const app = App.getInstance()
         this.resources = app.resources
         this.stateMachine = app.stateMachine
+        this.renderer = app.renderer
     }
 
     update(): void {

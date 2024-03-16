@@ -21,7 +21,7 @@ export default class WeightsEnvironment extends Environment {
     constructor(scene: THREE.Scene, camera: Camera) {
         super(scene, camera)
 
-        this.debugFolder = this.debug.ui.addFolder('environment')
+        //this.debugFolder = this.debug.ui.addFolder('environment')
         this.backgroundColor =  '#160b00'
 
         this.createScene()

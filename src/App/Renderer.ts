@@ -16,11 +16,11 @@ import { Vector2 } from 'three'
 export default class Renderer {
     canvas: HTMLCanvasElement
     sizes: Sizes
-    scene: THREE.Scene
-    camera: Camera
     time: Time
     rendererInstance: THREE.WebGLRenderer
     composer: EffectComposer
+    renderPass: RenderPass
+    DOFPass: BokehPass
 
     debug: Debug
     debugFolder: GUI
@@ -28,11 +28,7 @@ export default class Renderer {
     DOFFolder: GUI
     bloomFolder: GUI
 
-    constructor(scene: THREE.Scene, camera: Camera)
-    {
-        this.scene = scene
-        this.camera = camera
-
+    constructor() {
         const app = App.getInstance()
         this.canvas = app.canvas
         this.sizes = app.sizes
@@ -86,10 +82,9 @@ export default class Renderer {
         })
 
         this.composer = new EffectComposer(this.rendererInstance, renderTarget)
-        this.composer.addPass(new RenderPass(this.scene, this.camera.instance))
     }
 
-    private initPostprocessing(): void {
+    private initBloom(): void {
         const unrealBloomPass = new UnrealBloomPass(new Vector2(this.sizes.width, this.sizes.height), 0.025, 0.3, 0.3)
         unrealBloomPass.enabled = false
         this.composer.addPass(unrealBloomPass)
@@ -108,20 +103,15 @@ export default class Renderer {
             unrealBloomPass.enabled = bloomController.enabled
         }
 
-        if(this.rendererInstance.getPixelRatio() === 1 && !this.rendererInstance.capabilities.isWebGL2) {
-            const smaaPass = new SMAAPass(this.sizes.width, this.sizes.height)
-            this.composer.addPass(smaaPass)
-        
-            console.log('Using SMAA')
-        }
+        this.bloomFolder.add(bloomController, 'strength', 0.01, 1, 0.001).onChange(bloomUpdate)
+        this.bloomFolder.add(bloomController, 'radius', 0.001, 1, 0.001).onChange(bloomUpdate)
+        this.bloomFolder.add(bloomController, 'threshold', 0.01, 1, 0.01).onChange(bloomUpdate)
+        this.bloomFolder.add(bloomController, 'enabled').onChange(bloomUpdate)
+    
+        bloomUpdate()
+    }
 
-        const bokehPass = new BokehPass(this.scene, this.camera.instance, {
-            focus: 1, 
-            aperture: 0.025, 
-            maxblur: 0.01
-        })
-        this.composer.addPass(bokehPass)
-
+    private initDOF(): void {
         const DOFController = {
             focus: 20, 
             aperture: 1.1, 
@@ -130,26 +120,39 @@ export default class Renderer {
         }
 
         const DOFUpdate = () => {
-            bokehPass.uniforms['focus'].value = DOFController.focus
-            bokehPass.uniforms['aperture'].value = DOFController.aperture * 0.00001
-            bokehPass.uniforms['maxblur'].value = DOFController.maxblur
-            bokehPass.enabled = DOFController.enabled
+            this.DOFPass.uniforms['focus'].value = DOFController.focus
+            this.DOFPass.uniforms['aperture'].value = DOFController.aperture * 0.00001
+            this.DOFPass.uniforms['maxblur'].value = DOFController.maxblur
+            this.DOFPass.enabled = DOFController.enabled
         }
 
-        
         this.DOFFolder.add(DOFController, 'focus', 10, 3000, 10).onChange(DOFUpdate)
         this.DOFFolder.add(DOFController, 'aperture', 0, 10, 0.1).onChange(DOFUpdate)
         this.DOFFolder.add(DOFController, 'maxblur', 0, 0.01, 0.001).onChange(DOFUpdate)
         this.DOFFolder.add(DOFController, 'enabled').onChange(DOFUpdate)
+    }
 
-        this.bloomFolder.add(bloomController, 'strength', 0.01, 1, 0.001).onChange(bloomUpdate)
-        this.bloomFolder.add(bloomController, 'radius', 0.001, 1, 0.001).onChange(bloomUpdate)
-        this.bloomFolder.add(bloomController, 'threshold', 0.01, 1, 0.01).onChange(bloomUpdate)
-        this.bloomFolder.add(bloomController, 'enabled').onChange(bloomUpdate)
-    
+    private updateDOF(scene: THREE.Scene, camera: Camera) {
+        if (this.DOFPass) {
+            this.composer.removePass(this.DOFPass)
+        }
 
-        DOFUpdate()
-        bloomUpdate()
+        this.DOFPass = new BokehPass(scene, camera.instance, {})
+        this.DOFPass.enabled = false
+
+        this.composer.addPass(this.DOFPass)
+    }
+
+    private initPostprocessing(): void {
+        if(this.rendererInstance.getPixelRatio() === 1 && !this.rendererInstance.capabilities.isWebGL2) {
+            const smaaPass = new SMAAPass(this.sizes.width, this.sizes.height)
+            this.composer.addPass(smaaPass)
+        
+            console.log('Using SMAA')
+        }
+
+        this.initBloom()
+        this.initDOF()
     }
 
     private toneMappingDebug(): void {
@@ -196,6 +199,17 @@ export default class Renderer {
             updateGUI()
             this.rendererInstance.toneMapping = toneMappingOptions[params.toneMapping]
         })
+    }
+
+    setRenderScene(scene: THREE.Scene, camera: Camera) {
+        if (this.renderPass) {
+            this.composer.removePass(this.renderPass)
+        }
+
+        this.renderPass = new RenderPass(scene, camera.instance)
+        this.composer.passes.unshift(this.renderPass)
+
+        this.updateDOF(scene, camera)
     }
 
     setClearColor(color: THREE.ColorRepresentation): void {

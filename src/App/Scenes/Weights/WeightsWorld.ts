@@ -11,9 +11,7 @@ export default class WeightsWorld extends World {
 
         this.scene = new THREE.Scene()
         const camera = new WeightsCamera(this.scene)
-        this.renderer = new Renderer(this.scene, camera)
-
-        this.resources.startLoading()
+        this.renderer.setRenderScene(this.scene, camera)
 
         this.stateMachine.on('transition', (previousState: string, currentState: string) => {
             if (currentState === 'ready') {
@@ -25,11 +23,9 @@ export default class WeightsWorld extends World {
 
     update(): void {
         if (this.environment) this.environment.update()
-        this.renderer.update()
     }
 
     resize(): void {
         if (this.environment) this.environment.resize()
-        this.renderer.resize()
     }
 }

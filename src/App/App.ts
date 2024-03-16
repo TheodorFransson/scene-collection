@@ -9,6 +9,7 @@ import StateMachine from './StateMachine/StateMachine'
 import StudioWorld from './Scenes/Studio/StudioWorld'
 import World from './World/World'
 import WeightsWorld from './Scenes/Weights/WeightsWorld';
+import Renderer from './Renderer';
 
 export default class App {
     private static instance: App | null = null
@@ -17,8 +18,9 @@ export default class App {
     debug: Debug
     sizes: Sizes
     time: Time
-    resources: Resources
     stateMachine: StateMachine
+    resources: Resources
+    renderer: Renderer
     worlds: World[]
     activeWorld: World
 
@@ -47,6 +49,8 @@ export default class App {
         this.stateMachine.initialize(['load', 'ready', 'city', 'studio', 'weights'])
 
         this.resources = new Resources(sources)
+        this.resources.startLoading()
+        this.renderer = new Renderer()
 
         this.worlds = [new WeightsWorld()]
         this.activeWorld = this.worlds[0]
@@ -57,11 +61,13 @@ export default class App {
 
     resize(): void {
         this.activeWorld.resize()
+        this.renderer.resize()
     }
 
     update(): void {
         this.debug.preUpdate()
         this.activeWorld.update()
+        this.renderer.update()
         this.debug.update()
     }
 

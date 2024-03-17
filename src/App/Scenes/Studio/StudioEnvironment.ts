@@ -5,6 +5,7 @@ import Environment from "../../World/Environment";
 import StudioCamera from './StudioCamera'
 import { isGLTF } from '../../Utils/ResourceItem';
 import Camera from '../../Camera/Camera';
+import { GUI } from 'dat.gui';
 
 interface BakedTextureMaps {
     full: THREE.Texture
@@ -20,16 +21,13 @@ export default class StudioEnvironment extends Environment {
     backdropBaked: BakedTextureMaps
     modelBaked: BakedTextureMaps
     
-    constructor(scene: THREE.Scene, camera: Camera) {
-        super(scene, camera)
+    constructor(scene: THREE.Scene, camera: Camera, ui: GUI) {
+        super(scene, camera, ui)
 
-        this.debugFolder = this.debug.ui.addFolder('environment')
         this.backgroundColor =  '#0a0a0a'
 
         this.createScene()
         this.setupDebug()
-
-        this.stateMachine.switchState('studio')
     }
 
     createScene() {

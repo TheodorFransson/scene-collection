@@ -22,7 +22,7 @@ export default class App {
     resources: Resources
     renderer: Renderer
     worlds: World[]
-    activeWorld: World
+    activeWorld: World | undefined
 
     constructor(_canvas?: HTMLCanvasElement) {
         if (_canvas) {
@@ -46,27 +46,50 @@ export default class App {
 
         
         this.stateMachine = new StateMachine()
-        this.stateMachine.initialize(['load', 'ready', 'city', 'studio', 'weights'])
+        this.stateMachine.initialize(['load', 'ready'])
 
         this.resources = new Resources(sources)
         this.resources.startLoading()
         this.renderer = new Renderer()
 
-        this.worlds = [new WeightsWorld()]
-        this.activeWorld = this.worlds[0]
+        this.worlds = [new WeightsWorld(), new StudioWorld()]
+        this.worlds.forEach((world) => {
+            this.stateMachine.addState(world.name)
+        })
 
         this.sizes.on('resize', () => this.resize())
         this.time.on('tick', () => this.update())
+
+        this.setInitWorld(this.worlds[1])
+        this.updateActiveWorld()
+    }
+
+    setInitWorld(world: World): void {
+        this.stateMachine.on('transition', (previousState: string, currentState: string) => {
+            if (currentState === 'ready') {
+                this.stateMachine.switchState(world.name)
+            }
+        })
+    }
+
+    updateActiveWorld(): void {
+        this.stateMachine.on('transition', (previousState: string, currentState: string) => {
+            this.worlds.forEach((world) => {
+                if (currentState === world.name) {
+                    this.activeWorld = world
+                }
+            })
+        })
     }
 
     resize(): void {
-        this.activeWorld.resize()
+        if (this.activeWorld) this.activeWorld.resize()
         this.renderer.resize()
     }
 
     update(): void {
         this.debug.preUpdate()
-        this.activeWorld.update()
+        if (this.activeWorld) this.activeWorld.update()
         this.renderer.update()
         this.debug.update()
     }

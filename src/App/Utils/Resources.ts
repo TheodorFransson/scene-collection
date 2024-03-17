@@ -41,6 +41,8 @@ export default class Resources {
     }
 
     startLoading(): void {
+        this.stateMachine.switchState('load')
+
         for (const source of this.sources) {
             if (source.type === 'gltfModel') {
                 this.loaders.gltfLoader.load(source.path[0], (file) => {

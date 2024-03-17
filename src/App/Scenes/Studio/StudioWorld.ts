@@ -7,25 +7,9 @@ import StudioCamera from './StudioCamera'
 
 export default class StudioWorld extends World {
     constructor() {
-        super()
+        const scene = new THREE.Scene()
+        super(scene, 'studio')
 
-        this.scene = new THREE.Scene()
-        const camera = new StudioCamera(this.scene)
-        this.renderer.setRenderScene(this.scene, camera)
-
-        this.stateMachine.on('transition', (previousState: string, currentState: string) => {
-            if (currentState === 'ready') {
-                this.environment = new StudioEnvironment(this.scene, camera)
-                this.renderer.setClearColor(this.environment.backgroundColor)
-            }
-        })
-    }
-
-    update(): void {
-        if (this.environment) this.environment.update()
-    }
-
-    resize(): void {
-        if (this.environment) this.environment.resize()
+        super.listenToTransition(StudioEnvironment, StudioCamera)
     }
 }

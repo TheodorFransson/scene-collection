@@ -7,17 +7,13 @@ interface States {
 
 export default class StateMachine extends EventEmitter {
     private states: States = {}
-    private initialState: State | null = null
     private currentState: State | null = null
 
-    addState(name: string): void {
+    addState(name: string): State {
         const newState = new State(name)
         this.states[name] = newState
 
-        if (!this.initialState) {
-            this.initialState = newState
-            this.currentState = newState
-        }
+        return newState
     }
 
     switchState(newStateName: string): void {
@@ -25,17 +21,18 @@ export default class StateMachine extends EventEmitter {
         if (!newState || newState === this.currentState) return
 
         this.currentState?.triggerOff()
-        this.trigger('transition', [this.currentState?.name, newStateName])
+        const oldState = this.currentState
         this.currentState = newState
+        this.trigger('transition', [oldState?.name, newStateName])
         this.currentState.triggerOn()
     }
 
     initialize(states: string[]): void {
         states.forEach(stateName => this.addState(stateName))
-        
-        if (this.initialState) {
-            this.currentState = this.initialState
-            this.currentState.triggerOn()
-        }
+    }
+
+    setInitialState(state: string): void {
+        this.currentState = this.states[state]
+        this.currentState.triggerOn()
     }
 }

@@ -23,9 +23,11 @@ export default class Environment {
     environmentMap: EnvironmentMap
     backgroundColor: THREE.ColorRepresentation
 
-    constructor(scene: THREE.Scene, camera: Camera) {
+    constructor(scene: THREE.Scene, camera: Camera, ui: GUI) {
         this.scene = scene
         this.camera = camera
+  
+        this.debugFolder = ui.addFolder('environment')
 
         const app = App.getInstance()
 

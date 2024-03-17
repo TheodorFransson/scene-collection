@@ -16,6 +16,13 @@ export default class Camera
     stateMachine: StateMachine
     orbitControls: OrbitControls
 
+    initialControlSettings: {
+        enableDamping?: boolean
+        enablePan?: boolean
+        enableRotate?: boolean
+        enableZoom?: boolean
+    } = {}
+
     constructor(scene: THREE.Scene) {
         const app = App.getInstance()
         this.sizes = app.sizes
@@ -25,10 +32,9 @@ export default class Camera
         this.stateMachine = app.stateMachine
     }
 
-    initDefault(): void {
+    init(): void {
         this.setInstance()
         this.setControls()
-        this.handleStates()
     }
 
     setInstance(): void {
@@ -39,10 +45,20 @@ export default class Camera
 
     setControls(): void {
         this.orbitControls = new OrbitControls(this.instance, this.canvas)
-        this.orbitControls.enableDamping = true
-        this.orbitControls.enablePan = false
-        this.orbitControls.enableRotate = false
-        this.orbitControls.enableZoom = false
+        this.initialControlSettings = {
+            enableDamping: true,
+            enablePan: false,
+            enableRotate: false,
+            enableZoom: false,
+        }
+    }
+
+    updateControls(): void {
+        if (this.orbitControls && this.initialControlSettings) {
+            Object.keys(this.initialControlSettings).forEach((setting) => {
+                this.orbitControls[setting] = this.initialControlSettings[setting]
+            })
+        }
     }
 
     resize(): void {
@@ -50,13 +66,12 @@ export default class Camera
         this.instance.updateProjectionMatrix()
     }
 
-    handleStates(): void {
-        this.stateMachine.on('transition', (_previousState: string, currentState: string) => {
-            const isInteractiveState = ['city', 'studio', 'weights'].includes(currentState)
-            this.orbitControls.enablePan = isInteractiveState
-            this.orbitControls.enableRotate = isInteractiveState
-            this.orbitControls.enableZoom = isInteractiveState
-        })
+    setEnabled(boolean: boolean): void {
+        this.orbitControls.enabled = boolean
+
+        if (boolean) {
+            this.updateControls()
+        } 
     }
 
     update(): void {

@@ -8,9 +8,7 @@ export default class WeightsCamera extends Camera {
     constructor(scene: THREE.Scene) {
         super(scene)
 
-        this.setInstance()
-        this.setControls()
-        super.handleStates()
+        super.init()
     }
 
     setInstance(): void {
@@ -22,7 +20,11 @@ export default class WeightsCamera extends Camera {
     setControls(): void {
         this.orbitControls = new OrbitControls(this.instance, this.canvas)
         this.orbitControls.target.set(0, 1, 0)
-        this.orbitControls.enableDamping = true
-        this.orbitControls.enablePan = false
+        this.initialControlSettings = {
+            enableDamping: true,
+            enablePan: false,
+            enableRotate: true,
+            enableZoom: true,
+        }
     }
 }

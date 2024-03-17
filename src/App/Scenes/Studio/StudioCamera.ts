@@ -7,14 +7,12 @@ import { GUI } from 'dat.gui'
 export default class StudioCamera extends Camera {
     debugFolder: GUI
 
-    constructor(scene: THREE.Scene) {
+    constructor(scene: THREE.Scene, parentFolder: GUI) {
         super(scene)
 
-        this.debugFolder = this.debug.ui.addFolder('camera')
+        this.debugFolder = parentFolder.addFolder('camera')
 
-        this.setInstance()
-        this.setControls()
-        super.handleStates()
+        super.init()
     }
 
     setInstance(): void {
@@ -26,10 +24,13 @@ export default class StudioCamera extends Camera {
     setControls(): void {
         this.orbitControls = new OrbitControls(this.instance, this.canvas)
         this.orbitControls.target.set(0, 1, 0)
-        this.orbitControls.enableDamping = true
-        this.orbitControls.enablePan = true
-        this.orbitControls.enableRotate = true
-        this.orbitControls.enableZoom = true
+
+        this.initialControlSettings = {
+            enableDamping: true,
+            enablePan: true,
+            enableRotate: true,
+            enableZoom: true,
+        }
 
         const params = {
             fov: 35

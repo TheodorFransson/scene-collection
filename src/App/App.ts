@@ -8,8 +8,9 @@ import sources from './World/Data/sources'
 import StateMachine from './StateMachine/StateMachine'
 import StudioWorld from './Scenes/Studio/StudioWorld'
 import World from './World/World'
-import WeightsWorld from './Scenes/Weights/WeightsWorld';
-import Renderer from './Renderer';
+import WeightsWorld from './Scenes/Weights/WeightsWorld'
+import Renderer from './Renderer'
+import { GUIController } from 'dat.gui'
 
 export default class App {
     private static instance: App | null = null
@@ -44,41 +45,44 @@ export default class App {
         this.sizes = new Sizes()
         this.time = new Time()
 
+       
         this.stateMachine = new StateMachine()
         this.stateMachine.initialize(['load', 'ready'])
 
         this.resources = new Resources(sources)
         this.resources.startLoading()
-        this.renderer = new Renderer()
 
-        this.worlds = [new WeightsWorld(), new StudioWorld()]
-        this.worlds.forEach((world) => {
-            this.stateMachine.addState(world.name)
-        })
+        this.renderer = new Renderer()
+        
+        this.worlds = [new StudioWorld(), new WeightsWorld()]
+
+        this.addWorldSelector()
 
         this.sizes.on('resize', () => this.resize())
         this.time.on('tick', () => this.update())
-
-        this.setInitWorld(this.worlds[1])
-        this.updateActiveWorld()
     }
 
-    setInitWorld(world: World): void {
+    addWorldSelector(): void {
+        const worldNames = this.worlds.map(config => config.name)
+        const initialWorldName = worldNames[0]
+
+        const worldSelector = { world: initialWorldName }
+        this.settings.gui.add(worldSelector, 'world', worldNames).onChange((selectedWorldName) => {
+            const world = this.worlds.find((world) => world.name === selectedWorldName)
+            this.switchWorld(world)
+        })
+
         this.stateMachine.on('transition', (previousState: string, currentState: string) => {
             if (currentState === 'ready') {
-                this.stateMachine.switchState(world.name)
+                const world = this.worlds.find((world) => world.name === initialWorldName)
+                this.switchWorld(world)
             }
         })
     }
 
-    updateActiveWorld(): void {
-        this.stateMachine.on('transition', (previousState: string, currentState: string) => {
-            this.worlds.forEach((world) => {
-                if (currentState === world.name) {
-                    this.activeWorld = world
-                }
-            })
-        })
+    switchWorld(world: World) {
+        this.activeWorld = world
+        this.stateMachine.switchState(world.name)
     }
 
     resize(): void {

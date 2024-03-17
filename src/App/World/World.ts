@@ -30,20 +30,16 @@ export default class World {
         this.renderer = app.renderer
         this.settings = app.settings
 
-        this.initWorldFolder()
-    }
-
-    initWorldFolder(): void {
-        this.worldFolder = this.settings.gui.addFolder(this.name)
-        this.worldFolder.hide()
+        this.stateMachine.addState(name)
     }
 
     listenToTransition(EnvironmentClass: new (scene: THREE.Scene, camera: Camera, ui: GUI) => Environment, CameraClass: new (scene: THREE.Scene, parentFolder: GUI) => Camera): void {
         this.stateMachine.on('transition', (previousState: string, currentState: string) => {
             if (currentState === this.name) {
+                if (!this.worldFolder) this.worldFolder = this.settings.gui.addFolder(this.name)
                 if (!this.camera) this.camera = new CameraClass(this.scene, this.worldFolder)
                 if (!this.environment) this.environment = new EnvironmentClass(this.scene, this.camera, this.worldFolder)
-
+                
                 this.camera.setEnabled(true)
 
                 this.renderer.setRenderScene(this.scene, this.camera)

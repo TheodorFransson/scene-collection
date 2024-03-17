@@ -1,18 +1,13 @@
 import * as dat from 'dat.gui'
 import Stats from 'three/examples/jsm/libs/stats.module.js';
 
-export default class Debug {
-    active: boolean
+export default class Settings {
     showStats: boolean
-    night: boolean
-    ui: dat.GUI
+    gui: dat.GUI
     stats?: Stats
 
     constructor() {
-        this.active = window.location.hash.includes('debug')
-        this.showStats = window.location.hash.includes('stats')
-
-        this.ui = new dat.GUI()
+        this.gui = new dat.GUI()
 
         if (this.showStats) {
             this.stats = new Stats()

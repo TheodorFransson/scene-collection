@@ -3,7 +3,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 
 import App from '../App.js'
 import Sizes from '../Utils/Sizes'
-import Debug from '../Utils/Debug'
+import Settings from '../Utils/Settings.js'
 import StateMachine from '../StateMachine/StateMachine'
 
 export default class Camera
@@ -12,7 +12,7 @@ export default class Camera
     instance: THREE.PerspectiveCamera
     sizes: Sizes
     canvas: HTMLElement
-    debug: Debug
+    settings: Settings
     stateMachine: StateMachine
     orbitControls: OrbitControls
 
@@ -28,7 +28,7 @@ export default class Camera
         this.sizes = app.sizes
         this.scene = scene
         this.canvas = app.canvas
-        this.debug = app.debug
+        this.settings = app.settings
         this.stateMachine = app.stateMachine
     }
 

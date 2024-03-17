@@ -2,7 +2,6 @@ import * as THREE from 'three'
 
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import Camera from '../../Camera/Camera'
-import { GUI } from 'dat.gui'
 
 export default class WeightsCamera extends Camera {
     constructor(scene: THREE.Scene) {

@@ -5,12 +5,12 @@ import Camera from '../../Camera/Camera'
 import { GUI } from 'dat.gui'
 
 export default class StudioCamera extends Camera {
-    debugFolder: GUI
+    settingsFolder: GUI
 
     constructor(scene: THREE.Scene, parentFolder: GUI) {
         super(scene)
 
-        this.debugFolder = parentFolder.addFolder('camera')
+        this.settingsFolder = parentFolder.addFolder('camera')
 
         super.init()
     }
@@ -41,6 +41,6 @@ export default class StudioCamera extends Camera {
             this.instance.updateProjectionMatrix()
         }
 
-        this.debugFolder.add(params, 'fov', 5, 120, 5).onChange(updateFOV)
+        this.settingsFolder.add(params, 'fov', 5, 120, 5).onChange(updateFOV)
     }
 }

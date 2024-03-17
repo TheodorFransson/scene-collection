@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 
-import Debug from './Utils/Debug'
+import Settings from './Utils/Settings'
 import Sizes from './Utils/Sizes'
 import Time from './Utils/Time'
 import Resources from './Utils/Resources'
@@ -15,7 +15,7 @@ export default class App {
     private static instance: App | null = null
 
     canvas: HTMLCanvasElement
-    debug: Debug
+    settings: Settings
     sizes: Sizes
     time: Time
     stateMachine: StateMachine
@@ -40,11 +40,10 @@ export default class App {
     }
 
     private completeInitialization(): void {
-        this.debug = new Debug()
+        this.settings = new Settings()
         this.sizes = new Sizes()
         this.time = new Time()
 
-        
         this.stateMachine = new StateMachine()
         this.stateMachine.initialize(['load', 'ready'])
 
@@ -88,10 +87,10 @@ export default class App {
     }
 
     update(): void {
-        this.debug.preUpdate()
+        this.settings.preUpdate()
         if (this.activeWorld) this.activeWorld.update()
         this.renderer.update()
-        this.debug.update()
+        this.settings.update()
     }
 
     destroy(): void {
@@ -114,9 +113,7 @@ export default class App {
             }
         })
 
-        if(this.debug.active) {
-            this.debug.ui.destroy()
-        }
+        this.settings.gui.destroy()
     }
 
     public static getInstance(): App {

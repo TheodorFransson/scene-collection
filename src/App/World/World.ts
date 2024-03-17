@@ -7,14 +7,14 @@ import StateMachine from '../StateMachine/StateMachine.js'
 import Environment from './Environment.js'
 import Camera from '../Camera/Camera.js'
 import { GUI } from 'dat.gui'
-import Debug from '../Utils/Debug.js'
+import Settings from '../Utils/Settings.js'
 
 export default class World {
     scene: THREE.Scene
     renderer: Renderer
     resources: Resources
     stateMachine: StateMachine
-    debug: Debug
+    settings: Settings
     environment: Environment
     camera: Camera
     name: string
@@ -28,13 +28,13 @@ export default class World {
         this.resources = app.resources
         this.stateMachine = app.stateMachine
         this.renderer = app.renderer
-        this.debug = app.debug
+        this.settings = app.settings
 
         this.initWorldFolder()
     }
 
     initWorldFolder(): void {
-        this.worldFolder = this.debug.ui.addFolder(this.name)
+        this.worldFolder = this.settings.gui.addFolder(this.name)
         this.worldFolder.hide()
     }
 

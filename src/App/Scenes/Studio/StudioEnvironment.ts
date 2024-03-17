@@ -21,8 +21,8 @@ export default class StudioEnvironment extends Environment {
     backdropBaked: BakedTextureMaps
     modelBaked: BakedTextureMaps
     
-    constructor(scene: THREE.Scene, camera: Camera, ui: GUI) {
-        super(scene, camera, ui)
+    constructor(scene: THREE.Scene, camera: Camera, gui: GUI) {
+        super(scene, camera, gui)
 
         this.backgroundColor =  '#0a0a0a'
 
@@ -92,7 +92,7 @@ export default class StudioEnvironment extends Environment {
             this.updateTexture(this.model, this.modelBaked[params.light])
         }
 
-        this.debugFolder.add(params, 'light', Object.keys(lightOptions)).onChange(() => {
+        this.settingsFolder.add(params, 'light', Object.keys(lightOptions)).onChange(() => {
             updateLight()
         })
     }

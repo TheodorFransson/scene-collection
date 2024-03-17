@@ -10,7 +10,7 @@ import App from './App.js'
 import Sizes from './Utils/Sizes.js'
 import Camera from './Camera/Camera.js'
 import Time from './Utils/Time.js'
-import Debug from './Utils/Debug.js'
+import Settings from './Utils/Settings.js'
 import { Vector2 } from 'three'
 
 export default class Renderer {
@@ -22,8 +22,8 @@ export default class Renderer {
     renderPass: RenderPass
     DOFPass: BokehPass
 
-    debug: Debug
-    debugFolder: GUI
+    settings: Settings
+    settingsFolder: GUI
     toneMappingFolder: GUI
     DOFFolder: GUI
     bloomFolder: GUI
@@ -33,12 +33,12 @@ export default class Renderer {
         this.canvas = app.canvas
         this.sizes = app.sizes
         this.time = app.time
-        this.debug = app.debug
+        this.settings = app.settings
 
-        this.debugFolder = this.debug.ui.addFolder('postprocessing')
-        this.toneMappingFolder = this.debug.ui.addFolder('toneMapping')
-        this.DOFFolder = this.debugFolder.addFolder('DOF')
-        this.bloomFolder = this.debugFolder.addFolder('unreal bloom')
+        this.settingsFolder = this.settings.gui.addFolder('postprocessing')
+        this.toneMappingFolder = this.settings.gui.addFolder('toneMapping')
+        this.DOFFolder = this.settingsFolder.addFolder('DOF')
+        this.bloomFolder = this.settingsFolder.addFolder('unreal bloom')
 
         this.toneMappingDebug()
 

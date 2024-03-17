@@ -19,8 +19,8 @@ export default class WeightsEnvironment extends Environment {
     bakedGround: BakedTextureMaps
     bakedEquipment: BakedTextureMaps
     
-    constructor(scene: THREE.Scene, camera: Camera, ui: GUI) {
-        super(scene, camera, ui)
+    constructor(scene: THREE.Scene, camera: Camera, gui: GUI) {
+        super(scene, camera, gui)
 
         this.backgroundColor =  '#160b00'
 

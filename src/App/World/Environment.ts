@@ -3,7 +3,7 @@ import { GUI } from 'dat.gui'
 
 import App from '../App'
 import Camera from '../Camera/Camera'
-import Debug from '../Utils/Debug'
+import Settings from '../Utils/Settings'
 import StateMachine from '../StateMachine/StateMachine'
 import Resources from '../Utils/Resources'
 
@@ -18,22 +18,22 @@ export default class Environment {
     camera: Camera
     resources: Resources
     stateMachine: StateMachine
-    debug: Debug
-    debugFolder: GUI | undefined
+    settings: Settings
+    settingsFolder: GUI | undefined
     environmentMap: EnvironmentMap
     backgroundColor: THREE.ColorRepresentation
 
-    constructor(scene: THREE.Scene, camera: Camera, ui: GUI) {
+    constructor(scene: THREE.Scene, camera: Camera, gui: GUI) {
         this.scene = scene
         this.camera = camera
   
-        this.debugFolder = ui.addFolder('environment')
+        this.settingsFolder = gui.addFolder('environment')
 
         const app = App.getInstance()
 
         this.resources = app.resources
         this.stateMachine = app.stateMachine
-        this.debug = app.debug
+        this.settings = app.settings
     }
 
     update(): void {
@@ -69,8 +69,8 @@ export default class Environment {
         this.scene.environment = this.environmentMap.texture
         this.environmentMap.updateMaterials()
 
-        if (this.debug.active && this.debugFolder) {
-            this.debugFolder
+        if (this.settingsFolder) {
+            this.settingsFolder
                 .add(this.environmentMap, 'intensity', 0, 4, 0.001)
                 .name('envMapIntensity')
                 .onChange(this.environmentMap.updateMaterials);

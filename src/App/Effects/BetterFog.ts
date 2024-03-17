@@ -1,6 +1,6 @@
 import * as THREE from 'three'
 import App from '../App'
-import Debug from '../Utils/Debug'
+import Settings from '../Utils/Settings'
 
 interface Params {
     density: number
@@ -10,18 +10,18 @@ interface Params {
 
 export default class BetterFog {
     scene: THREE.Scene
-    debug: Debug
+    settings: Settings
     night: boolean
     params: Params
     fog: THREE.FogExp2
-    debugFolder: any
+    settingsFolder: any
 
     constructor(scene: THREE.Scene) {
         const app = App.getInstance()
         this.scene = scene
-        this.debug = app.debug
+        this.settings = app.settings
 
-        this.night = this.debug.night
+        this.night = false
 
         this.params = {
             density: 0.01,
@@ -34,10 +34,8 @@ export default class BetterFog {
         this.inject()
         this.assign()
 
-        if (this.debug.active) {
-            this.debugFolder = this.debug.ui.addFolder('Fog')
-            this.initDebug()
-        }
+        this.settingsFolder = this.settings.gui.addFolder('Fog')
+        this.initSettings()        
     }
 
     inject(): void {
@@ -85,13 +83,13 @@ export default class BetterFog {
         } 
     }
 
-    initDebug(): void {
+    initSettings(): void {
         const update = () => {
             this.fog.density = this.params.density
             this.fog.color.set(this.params.color);
         }
 
-        this.debugFolder.add(this.params, 'density', 0.0001, 0.05, 0.0001).onChange(update)
-        this.debugFolder.addColor(this.params, 'color').onChange(update)
+        this.settingsFolder.add(this.params, 'density', 0.0001, 0.05, 0.0001).onChange(update)
+        this.settingsFolder.addColor(this.params, 'color').onChange(update)
     }
 }

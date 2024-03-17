@@ -1,11 +1,9 @@
 import * as THREE from 'three'
 
-import App from '../../App'
-import Environment from "../../World/Environment";
-import StudioCamera from './StudioCamera'
-import { isGLTF } from '../../Utils/ResourceItem';
-import Camera from '../../Camera/Camera';
-import { GUI } from 'dat.gui';
+import Environment from "../../World/Environment"
+import { isGLTF } from '../../Utils/ResourceItem'
+import Camera from '../../Camera/Camera'
+import { GUI } from 'dat.gui'
 
 interface BakedTextureMaps {
     full: THREE.Texture
@@ -27,7 +25,7 @@ export default class StudioEnvironment extends Environment {
         this.backgroundColor =  '#0a0a0a'
 
         this.createScene()
-        this.setupDebug()
+        this.setupSettings()
     }
 
     createScene() {
@@ -75,7 +73,7 @@ export default class StudioEnvironment extends Environment {
         this.scene.add(this.model)
     }
 
-    setupDebug() {
+    setupSettings() {
         const params = {
             light: "full"
         }

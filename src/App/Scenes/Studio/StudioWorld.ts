@@ -6,8 +6,7 @@ import StudioCamera from './StudioCamera'
 
 export default class StudioWorld extends World {
     constructor() {
-        const scene = new THREE.Scene()
-        super(scene, 'studio')
+        super(new THREE.Scene(), 'studio')
 
         super.listenToTransition(StudioEnvironment, StudioCamera)
     }

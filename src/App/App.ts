@@ -11,6 +11,7 @@ import World from './World/World'
 import WeightsWorld from './Scenes/Weights/WeightsWorld'
 import Renderer from './Renderer'
 import { GUIController } from 'dat.gui'
+import CityWorld from './Scenes/City/CityWorld';
 
 export default class App {
     private static instance: App | null = null
@@ -54,7 +55,7 @@ export default class App {
 
         this.renderer = new Renderer()
         
-        this.worlds = [new StudioWorld(), new WeightsWorld()]
+        this.worlds = [new CityWorld(), new StudioWorld(), new WeightsWorld()]
 
         this.addWorldSelector()
 

@@ -47,7 +47,7 @@ export default class Environment {
     createScene(): void {
     }
 
-    setupDebug(): void {
+    setupSettings(): void {
     }
 
     setEnvironmentMap(): void {
@@ -75,9 +75,6 @@ export default class Environment {
                 .name('envMapIntensity')
                 .onChange(this.environmentMap.updateMaterials);
         }
-    }
-
-    setState(): void {
     }
 
     updateMaterial(scene: THREE.Scene, material: THREE.Material): void {

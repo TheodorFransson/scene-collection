@@ -7,8 +7,7 @@ import WeightsCamera from './WeightsCamera'
 
 export default class WeightsWorld extends World {
     constructor() {
-        const scene = new THREE.Scene()
-        super(scene, 'weights')
+        super(new THREE.Scene(), 'weights')
 
         super.listenToTransition(WeightsEnvironment, WeightsCamera)
     }

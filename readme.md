@@ -21,3 +21,6 @@ npm run dev
 # Build for production in the dist/ directory
 npm run build
 ```
+## Acknowledgments
+
+Thanks to Bruno Simon for the [Three.js Journey](https://threejs-journey.com/) course.

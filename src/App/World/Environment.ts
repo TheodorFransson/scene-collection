@@ -77,7 +77,7 @@ export default class Environment {
         }
     }
 
-    updateMaterial(scene: THREE.Scene, material: THREE.Material): void {
+    updateMaterial(scene: THREE.Scene | THREE.Group<THREE.Object3DEventMap>, material: THREE.Material): void {
         scene.traverse((child: THREE.Object3D) => {
             if (child instanceof THREE.Mesh) {
                 child.material = material

@@ -119,9 +119,9 @@ const resources: Resource[] = [
         path: ['models/city/Part06.glb']
     },
     {
-        name: 'cityPart07',
+        name: 'scaffolding',
         type: 'gltfModel',
-        path: ['models/city/Part07.glb']
+        path: ['models/city/Scaffolding.glb']
     },
     {
         name: 'backsides',
@@ -132,6 +132,36 @@ const resources: Resource[] = [
         name: 'screens',
         type: 'gltfModel',
         path: ['models/city/Screens.glb']
+    },
+    {
+        name: 'cityPartNight00',
+        type: 'gltfModel',
+        path: ['models/city/night/PartNight00.glb']
+    },
+    {
+        name: 'cityPartNight01',
+        type: 'gltfModel',
+        path: ['models/city/night/PartNight01.glb']
+    },
+    {
+        name: 'cityPartNight02',
+        type: 'gltfModel',
+        path: ['models/city/night/PartNight02.glb']
+    },
+    {
+        name: 'cityPartNight03',
+        type: 'gltfModel',
+        path: ['models/city/night/PartNight03.glb']
+    },
+    {
+        name: 'cityPartNight04',
+        type: 'gltfModel',
+        path: ['models/city/night/PartNight04.glb']
+    },
+    {
+        name: 'cityPartNight05',
+        type: 'gltfModel',
+        path: ['models/city/night/PartNight05.glb']
     },
     {
         name: 'cityBaked00',

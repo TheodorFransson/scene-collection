@@ -5,7 +5,6 @@ import Camera from '../../Camera/Camera'
 import Environment from '../../World/Environment'
 import { isGLTF } from '../../Utils/ResourceItem'
 import BetterFog from '../../Effects/BetterFog'
-import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader'
 
 export default class CityEnvironment extends Environment {
     partsDay: THREE.Group<THREE.Object3DEventMap>[] = []

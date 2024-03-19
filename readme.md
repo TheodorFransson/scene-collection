@@ -2,9 +2,14 @@
 
 A collection of scenes created for various projects and experiments.
 
-## Setup
-Download [Node.js](https://nodejs.org/en/download/).
-Run this followed commands:
+## Demo
+
+A demo can be found [here](https://scene-collection.vercel.app).
+Note! The demo is around 20MB.
+
+## Build
+To build the project yourself you need [Node.js](https://nodejs.org/en/download/).
+Use these commands:
 
 ``` bash
 # Install dependencies (only the first time)

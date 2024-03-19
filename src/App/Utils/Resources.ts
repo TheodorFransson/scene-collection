@@ -5,8 +5,9 @@ import App from '../App'
 import StateMachine from '../StateMachine/StateMachine'
 import ResourceItem from './ResourceItem'
 import Resource from '../World/Data/Resource'
+import EventEmitter from './EventEmitter'
 
-export default class Resources {
+export default class Resources extends EventEmitter {
     app: App
     stateMachine: StateMachine
     sources: Resource[]
@@ -20,6 +21,8 @@ export default class Resources {
     }
 
     constructor(sources: Resource[]) {
+        super()
+
         this.app = App.getInstance()
         this.stateMachine = this.app.stateMachine
 
@@ -64,6 +67,8 @@ export default class Resources {
         if (source) this.items[source.name] = file
 
         this.loaded++
+
+        this.trigger("sourceLoaded", [this.loaded, this.toLoad])
 
         if (this.loaded === this.toLoad) {
             this.stateMachine.switchState('ready')

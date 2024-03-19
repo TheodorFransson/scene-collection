@@ -12,6 +12,7 @@ import WeightsWorld from './Scenes/Weights/WeightsWorld'
 import Renderer from './Renderer'
 import { GUIController } from 'dat.gui'
 import CityWorld from './Scenes/City/CityWorld';
+import LoadWorld from './Scenes/Load/LoadWorld';
 
 export default class App {
     private static instance: App | null = null
@@ -51,16 +52,18 @@ export default class App {
         this.stateMachine.initialize(['load', 'ready'])
 
         this.resources = new Resources(sources)
-        this.resources.startLoading()
 
         this.renderer = new Renderer()
-        
+
+        new LoadWorld()
         this.worlds = [new CityWorld(), new StudioWorld(), new WeightsWorld()]
 
         this.addWorldSelector()
 
         this.sizes.on('resize', () => this.resize())
         this.time.on('tick', () => this.update())
+
+        this.stateMachine.switchState('load')
     }
 
     addWorldSelector(): void {

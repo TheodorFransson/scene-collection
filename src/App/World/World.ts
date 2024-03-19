@@ -46,9 +46,11 @@ export default class World {
                 this.renderer.setClearColor(this.environment.backgroundColor)
 
                 this.worldFolder.show()
+                this.onTransitionTo()
             } else if (previousState === this.name) {
-                this.camera.setEnabled(false)
-                this.worldFolder.hide()
+                if (this.camera) this.camera.setEnabled(false)
+                if (this.worldFolder) this.worldFolder.hide()
+                if (this.environment) this.onTransitionFrom(this.environment)
             }
         })
     }
@@ -59,5 +61,13 @@ export default class World {
 
     resize(): void {
         if (this.environment) this.environment.resize()
+    }
+
+    onTransitionFrom(environment: Environment): void {
+
+    }
+
+    onTransitionTo(): void {
+
     }
 }
